@@ -43,7 +43,7 @@ d3.dsv(";", "logiernaechte.csv", d => {
 
         var lengthScale = d3.scaleLinear()
             .domain([0, d3.max(stays, n => n.nights)])
-            .range([0, 1000]);
+            .range([0, 600]);
 
         var bars = d3.select("svg")
             .selectAll("g")
