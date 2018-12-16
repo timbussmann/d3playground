@@ -25,7 +25,7 @@ d3.dsv(";", "logiernaechte.csv", d => {
     }
 
     d3.select("select")
-        .on("change", function () { updateGraph(data[this.value]) })
+        .on("change", function () { updateGraph(data, parseInt(this.value)) })
         .selectAll("option")
         .data(data, d => d.year)
         .enter()
@@ -33,10 +33,11 @@ d3.dsv(";", "logiernaechte.csv", d => {
         .attr("value", (d, i) => i)
         .text(d => d.year);
 
-    updateGraph(data[0]);
+    updateGraph(data, 0);
 
-    function updateGraph(data) {
+    function updateGraph(allData, index) {
         const textwidth = 200;
+        var data = allData[index];
 
         var stays = data.stays;
 
@@ -54,7 +55,30 @@ d3.dsv(";", "logiernaechte.csv", d => {
             .text(d => d.nights);
         bars.select(".countryText")
             .text(d => d.country);
-        bars.select("rect").attr("width", d => lengthScale(d.nights));
+        bars.select("rect")
+            .attr("width", d => lengthScale(d.nights))
+            .attr("fill", (d, i) => {
+                if(index == 0)
+                {
+                    return "blue";
+                }
+
+                var prevIndex = allData[index - 1].stays.findIndex(e => e.country === d.country);
+                
+                if (prevIndex == -1) {
+                    return "yellow";
+                }
+
+                if(prevIndex < i){
+                    return "red";
+                }
+                
+                if (prevIndex > i) {
+                    return "green";
+                }
+
+                return "blue";
+            });
 
         // exit:
         bars.exit().remove();
