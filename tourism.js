@@ -48,14 +48,17 @@ d3.dsv(";", "logiernaechte.csv", d => {
         var bars = d3.select("svg")
             .selectAll("g")
             .data(stays);
+            
 
         // update:
         bars.select(".nightsText")
+            .transition()
             .attr("x", d => lengthScale(d.nights) + textwidth)
             .text(d => d.nights);
         bars.select(".countryText")
             .text(d => d.country);
         bars.select("rect")
+            .transition()
             .attr("width", d => lengthScale(d.nights))
             .attr("fill", (d, i) => {
                 if(index == 0)
