@@ -1,7 +1,7 @@
 d3.dsv(";", "logiernaechte.csv", d => {
     return d;
 }).then(data => {
-    console.log(data[data.length-1]);
+    console.log(data[data.length - 1]);
 
     for (let i = 0; i < data.length; i++) {
         var currentYear = data[i];
@@ -36,6 +36,8 @@ d3.dsv(";", "logiernaechte.csv", d => {
     updateGraph(data[0]);
 
     function updateGraph(data) {
+        const textwidth = 200;
+
         var stays = data.stays;
 
         var lengthScale = d3.scaleLinear()
@@ -47,15 +49,17 @@ d3.dsv(";", "logiernaechte.csv", d => {
             .data(stays);
 
         // update:
-        bars.select(".nightsText").text(d => d.nights);
-        bars.select(".countryText").text(d => d.country);
+        bars.select(".nightsText")
+            .attr("x", d => lengthScale(d.nights) + textwidth)
+            .text(d => d.nights);
+        bars.select(".countryText")
+            .text(d => d.country);
         bars.select("rect").attr("width", d => lengthScale(d.nights));
 
         // exit:
         bars.exit().remove();
 
-        // enter:
-        const textwidth = 200;
+        // enter:  
         var row = bars.enter().append("g");
         row.append("rect")
             .attr("width", d => lengthScale(d.nights))
@@ -77,5 +81,5 @@ d3.dsv(";", "logiernaechte.csv", d => {
             .attr("text-anchor", "end")
             .text(d => d.country);
     }
-    
+
 });
